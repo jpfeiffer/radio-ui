@@ -16,11 +16,11 @@ TEMPLATE = app
 SOURCES *= \
 	main.cpp \
 	RadioGui.cpp \
-		LogoDownloader.cpp
+	LogoDownloader.cpp
 
 HEADERS *= \
 	RadioGui.h \
-		LogoDownloader.h
+	LogoDownloader.h
 
 FORMS *= \
 	RadioGui.ui
