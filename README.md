@@ -8,10 +8,10 @@ Copyright (c) 2017 Johannes Pfeiffer (http://johannes.obticeo.de)
 Features
 --------
 
-Some of the currently implemented featues:
-* Load station information from json file (including URL and logo)
+Some of the currently implemented features:
+* Load station information from JSON file (including URL and logo)
 * Automatic play of first station on startup
-* UI size currenty fixed at 320x240 (3,5" Raspberry PI display)
+* UI size currently fixed at 320x240 (3,5" Raspberry PI display)
 * Volume control
 * Play and Pause button
 
