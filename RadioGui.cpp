@@ -21,6 +21,27 @@ namespace
 //full volume when starting and switching stations
 const int ciDefaultVolume = 100;
 
+//the stylesheet to use for the station label
+const QString cstrDefaultLabelStyleSheet = QStringLiteral("QLabel { background-color: %1; }");
+
+//the stylesheet to use for each station button
+const QString cstrDefaultButtonStyleSheet = QStringLiteral("QPushButton {" \
+																													 " border-radius: 15px;" \
+																													 " border: 3px solid rgb(72, 126, 176);" \
+																													 " color: rgb(72, 126, 176);" \
+																													 " background-color: %1;" \
+																													 " padding: 5px 5px 5px 5px;" \
+																													 " outline: none;" \
+																													 "}" \
+																													 "QPushButton:checked {" \
+																													 " border-radius: 15px;" \
+																													 " border: 3px solid rgb(255,255,255);" \
+																													 " color: rgb(255,255,255);" \
+																													 " background-color: %2;" \
+																													 " padding: 5px 5px 5px 5px;" \
+																													 " outline: none;" \
+																													 "}");
+
 QPixmap ScaleLogoToRectangle(const QPixmap &logo, const QRect &rect, const double &factor = 1.0)
 {
 	auto scaledLogo = logo;
@@ -131,6 +152,36 @@ QList<StationInformation> ReadStationsFromFile(const QString &file)
 				station.m_uLogoUrl = stationObject.value(QString("logo-url")).toString();
 			}
 
+			{
+				station.m_cBackgroundColorNormal = Qt::black;
+
+				if(true == stationObject.contains("background-color-normal"))
+				{
+					auto backgroundColor = stationObject.value(QString("background-color-normal")).toString();
+
+					QColor c(backgroundColor);
+					if(true == c.isValid())
+					{
+						station.m_cBackgroundColorNormal = c;
+					}
+				}
+			}
+
+			{
+				station.m_cBackgroundColorChecked = QColor(72, 126, 176);
+
+				if(true == stationObject.contains("background-color-checked"))
+				{
+					auto backgroundColor = stationObject.value(QString("background-color-checked")).toString();
+
+					QColor c(backgroundColor);
+					if(true == c.isValid())
+					{
+						station.m_cBackgroundColorChecked = c;
+					}
+				}
+			}
+
 			stations.append(station);
 		}
 	}
@@ -230,6 +281,13 @@ void RadioGui::loadStations()
 			}
 		}
 
+		//we replace the stylesheet with a modified one using the specified colors for the station
+		auto styleSheet = cstrDefaultButtonStyleSheet;
+		styleSheet = styleSheet.arg(station.m_cBackgroundColorNormal.name(QColor::HexArgb));
+		styleSheet = styleSheet.arg(station.m_cBackgroundColorChecked.name(QColor::HexArgb));
+
+		button->setStyleSheet(styleSheet);
+
 		button->setChecked(button == m_ui->btn1);
 		button->setEnabled(true);
 
@@ -305,7 +363,11 @@ void RadioGui::on_btnSource_clicked()
 		//the station logo may be too small or too big, scale for consistent look
 		auto logo = ScaleLogoToRectangle(QPixmap(m_CurrentStation.m_pStationLogo), m_ui->lblStation->contentsRect(), 0.8);
 
+		const auto style = cstrDefaultLabelStyleSheet.arg(m_CurrentStation.m_cBackgroundColorNormal.name(QColor::HexArgb));
+		m_ui->lblStation->setStyleSheet(style);
 		m_ui->lblStation->setPixmap(logo);
+
+
 		m_ui->labelInfo1->setText(m_CurrentStation.m_strDefaultPublisher);
 		m_ui->labelInfo2->setText(QString());
 

@@ -54,6 +54,20 @@ struct StationInformation
 	 * @brief m_strSecondMetadataKey The secondary information to be displayed below the main metadata string
 	 */
 	QString m_strSecondMetadataKey;
+
+	/**
+	 * @brief m_cBackgroundColor The background color for the stations button when the button is not checked
+	 *
+	 * @note The default color is defined as: rgb(0, 0, 0)
+	 */
+	QColor m_cBackgroundColorNormal;
+
+	/**
+	 * @brief m_cBackgroundColorChecked The background color for checked buttons
+	 *
+	 * @note The default color is defined as: rgb(72, 126, 176)
+	 */
+	QColor m_cBackgroundColorChecked;
 };
 
 /**

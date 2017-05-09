@@ -32,6 +32,7 @@
     "WDR Kiraka" : {
         "url" : "http://wdr-kiraka-live.icecast.wdr.de/wdr/kiraka/live/mp3/128/stream.mp3",
         "logo-url" : "http://www1.wdr.de/kinder/radio/kiraka/resources/img/logo/kiraka_logo.svg",
+        "background-color-normal" : "white",
         "meta_key_1" : "Publisher",
         "meta_key_2" : "Genre"
     }
