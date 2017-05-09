@@ -10,6 +10,7 @@ Features
 
 Some of the currently implemented features:
 * Load station information from JSON file (including URL and logo)
+  * Station logo can be specified as base64 encoded image (logo), as url (logo-url) or as file (logo-file)
 * Automatic play of first station on startup
 * UI size currently fixed at 320x240 (3,5" Raspberry PI display)
 * Volume control
