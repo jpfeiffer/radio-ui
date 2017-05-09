@@ -1,7 +1,27 @@
+Overview
+--------
+
 This is radio-ui, a simple qt based ui for playing radio streams.
 
 Copyright (c) 2017 Johannes Pfeiffer (http://johannes.obticeo.de)
 
+Features
+--------
+
+Some of the currently implemented featues:
+* Load station information from json file (including URL and logo)
+* Automatic play of first station on startup
+* UI size currenty fixed at 320x240 (3,5" Raspberry PI display)
+* Volume control
+* Play and Pause button
+
+Features which may or may not come:
+* Edit stations through web interface
+* Add support for podcasts/playlists
+
+Licensing
+---------
+```
 radio-ui is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as
 published by the Free Software Foundation, either version 3
@@ -16,3 +36,4 @@ A copy of the GNU Lesser General Public License is included in the
 radio-ui distribution in the file COPYING. If you did not receive this
 copy, write to the Free Software Foundation, Inc., 51 Franklin St,
 Fifth Floor, Boston, MA 02110-1301, USA.
+```
