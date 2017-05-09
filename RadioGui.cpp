@@ -205,9 +205,8 @@ void RadioGui::loadStations()
 		if(true == station.m_uLogoUrl.isValid())
 		{
 			m_LogoDownLoader->downloadLogo(station.m_uLogoUrl,
-																		 [buttons, i](QPixmap logo)
+																		 [=](QPixmap logo)
 																		 {
-																				auto button = buttons.at(i);
 																				auto s = button->property("station").value<StationInformation>();
 																				button->setIcon(QIcon(logo));
 																				s.m_pStationLogo = logo;
