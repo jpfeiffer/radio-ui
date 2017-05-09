@@ -406,8 +406,6 @@ void RadioGui::onMediaChanged()
 			m_ui->labelInfo2->setText(m_Player->metaData(i).toString());
 			SetMaximumFontForTextContainer(m_ui->labelInfo2);
 		}
-
-		qDebug() << i << m_Player->metaData(i).toString();
 	}
 }
 //----------------------------------------------------------------------------------------------------------------------
