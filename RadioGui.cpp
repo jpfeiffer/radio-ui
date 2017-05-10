@@ -411,6 +411,9 @@ void RadioGui::on_btnLoadLogos_clicked()
 																				s.m_pStationLogo = logo;
 																				button->setProperty("station", QVariant::fromValue(s));
 
+																				//be positive and expect a valid icon to be set
+																				button->setText(QString());
+
 																				if(true == button->icon().isNull())
 																				{
 																					button->setText(s.m_strDefaultPublisher);
