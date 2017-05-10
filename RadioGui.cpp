@@ -192,8 +192,9 @@ QList<StationInformation> ReadStationsFromFile(const QString &file)
 
 }
 
-RadioGui::RadioGui(QWidget *parent)
+RadioGui::RadioGui(const QString &stationsFileName, QWidget *parent)
 	: QMainWindow(parent)
+	, m_strStationsFile(stationsFileName)
 	, m_ui(new Ui::RadioGui)
 	, m_Player(new QMediaPlayer(), [](QMediaPlayer* p) { p->deleteLater(); })
 	, m_LogoDownLoader(new LogoDownloader(), [](LogoDownloader* d) { d->deleteLater(); })
@@ -206,9 +207,9 @@ RadioGui::RadioGui(QWidget *parent)
 	m_ui->stackedWidget->setCurrentWidget(m_ui->pagePlaying);
 	m_ui->sliderVolume->setValue(ciDefaultVolume);
 
-	connect(m_ui->btnPlayingPage, &QPushButton::clicked, this, &RadioGui::on_btnNavigation_clicked);
-	connect(m_ui->btnSelectSourcePage, &QPushButton::clicked, this, &RadioGui::on_btnNavigation_clicked);
-	connect(m_ui->btnSettingsPage, &QPushButton::clicked, this, &RadioGui::on_btnNavigation_clicked);
+	connect(m_ui->btnPlayingPage, &QPushButton::clicked, this, &RadioGui::onNavigationButtonClicked);
+	connect(m_ui->btnSelectSourcePage, &QPushButton::clicked, this, &RadioGui::onNavigationButtonClicked);
+	connect(m_ui->btnSettingsPage, &QPushButton::clicked, this, &RadioGui::onNavigationButtonClicked);
 
 	connect(m_Player.get(), &QMediaPlayer::volumeChanged, m_ui->sliderVolume, &QSlider::setValue);
 	connect(m_Player.get(), &QMediaPlayer::currentMediaChanged, this, &RadioGui::onMediaChanged);
@@ -235,7 +236,7 @@ RadioGui::~RadioGui()
 
 void RadioGui::loadStations()
 {
-	QList<StationInformation> cStations = ReadStationsFromFile(QString("stations.json"));
+	QList<StationInformation> cStations = ReadStationsFromFile(m_strStationsFile);
 
 	auto buttons = m_ui->pageSelectSource->findChildren<QPushButton*>();
 
@@ -291,7 +292,7 @@ void RadioGui::loadStations()
 		button->setChecked(button == m_ui->btn1);
 		button->setEnabled(true);
 
-		connect(button, &QPushButton::clicked, this, &RadioGui::on_btnSource_clicked);
+		connect(button, &QPushButton::clicked, this, &RadioGui::onSourceButtonClicked);
 	}
 }
 //----------------------------------------------------------------------------------------------------------------------
@@ -320,7 +321,7 @@ void RadioGui::on_btnStartStop_clicked()
 }
 //----------------------------------------------------------------------------------------------------------------------
 
-void RadioGui::on_btnNavigation_clicked()
+void RadioGui::onNavigationButtonClicked()
 {
 	QPushButton* pressedButton{};
 
@@ -346,7 +347,7 @@ void RadioGui::on_btnNavigation_clicked()
 }
 //----------------------------------------------------------------------------------------------------------------------
 
-void RadioGui::on_btnSource_clicked()
+void RadioGui::onSourceButtonClicked()
 {
 	QPushButton* clickedButton{};
 
@@ -387,6 +388,36 @@ void RadioGui::on_btnSource_clicked()
 		m_ui->btnStartStop->setIcon(QIcon(":/Resources/Resources/pause.png"));
 
 		emit m_ui->btnPlayingPage->clicked();
+	}
+}
+//----------------------------------------------------------------------------------------------------------------------
+
+void RadioGui::on_btnLoadLogos_clicked()
+{
+	auto buttons = m_ui->pageSelectSource->findChildren<QPushButton*>();
+
+	for(const auto &button : buttons)
+	{
+		StationInformation station = button->property("station").value<StationInformation>();
+
+		//if a valid url is given, we need to download the logo now
+		if(true == station.m_uLogoUrl.isValid())
+		{
+			m_LogoDownLoader->downloadLogo(station.m_uLogoUrl,
+																		 [=](QPixmap logo)
+																		 {
+																				auto s = button->property("station").value<StationInformation>();
+																				button->setIcon(QIcon(logo));
+																				s.m_pStationLogo = logo;
+																				button->setProperty("station", QVariant::fromValue(s));
+
+																				if(true == button->icon().isNull())
+																				{
+																					button->setText(s.m_strDefaultPublisher);
+																					SetMaximumFontForTextContainer<QAbstractButton>(button);
+																				}
+																		 });
+		}
 	}
 }
 //----------------------------------------------------------------------------------------------------------------------

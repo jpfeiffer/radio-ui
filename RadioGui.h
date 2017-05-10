@@ -83,7 +83,7 @@ class RadioGui : public QMainWindow
 	 * @brief RadioGui Default constructor
 	 * @param parent
 	 */
-	explicit RadioGui(QWidget *parent = nullptr);
+	explicit RadioGui(const QString &stationsFileName = QString("stations.json"), QWidget *parent = nullptr);
 
 	/**
 	 * @brief ~RadioGui Default destructor
@@ -103,14 +103,19 @@ private slots:
 	void on_btnStartStop_clicked();
 
 	/**
-	 * @brief on_btnNavigation_clicked Switch between the main gui pages
+	 * @brief on_btnLoadLogos_clicked Reload any pending logo files
 	 */
-	void on_btnNavigation_clicked();
+	void on_btnLoadLogos_clicked();
 
 	/**
-	 * @brief on_btnSource_clicked Switch to another station for playback
+	 * @brief onNavigationButtonClicked Switch between the main gui pages
 	 */
-	void on_btnSource_clicked();
+	void onNavigationButtonClicked();
+
+	/**
+	 * @brief onSourceButtonClicked Switch to another station for playback
+	 */
+	void onSourceButtonClicked();
 
 	/**
 	 * @brief onMediaChanged Used to detect when new media is available. This method is used to extract any available
@@ -119,6 +124,11 @@ private slots:
 	void onMediaChanged();
 
 private:
+
+	/**
+	 * @brief m_strStationsFile From where to load the station information, defaults to "stations.json"
+	 */
+	const QString m_strStationsFile;
 
 	/**
 	 * @brief ui The user interface
